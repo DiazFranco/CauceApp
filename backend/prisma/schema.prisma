@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AssetType {
+  accion
+  cedear
+  cripto
+  fci
+  bono
+  plazo_fijo
+  otro
+}
+
+enum Currency {
+  ARS
+  USD
+}
+
+enum TransactionType {
+  compra
+  venta
+}
+
+enum FxReference {
+  blue
+  mep
+  ccl
+  oficial
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  name       String?
+  avatarUrl  String?
+  fxReference FxReference @default(mep)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  assets            Asset[]
+  portfolioSnapshots PortfolioSnapshot[]
+}
+
+model Asset {
+  id            String   @id @default(uuid())
+  userId        String
+  type          AssetType
+  ticker        String
+  name          String?
+  currencyBought Currency
+  createdAt     DateTime @default(now())
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  priceSnapshots PriceSnapshot[]
+
+  @@index([userId])
+}
+
+model Transaction {
+  id       String          @id @default(uuid())
+  assetId  String
+  type     TransactionType
+  quantity Decimal         @db.Decimal(24, 8)
+  price    Decimal         @db.Decimal(24, 8)
+  currency Currency
+  date     DateTime
+  createdAt DateTime        @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+}
+
+model PriceSnapshot {
+  id        String   @id @default(uuid())
+  assetId   String
+  price     Decimal  @db.Decimal(24, 8)
+  currency  Currency
+  updatedAt DateTime @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId, updatedAt])
+}
+
+model PortfolioSnapshot {
+  id       String   @id @default(uuid())
+  userId   String
+  totalArs Decimal  @db.Decimal(24, 2)
+  totalUsd Decimal  @db.Decimal(24, 2)
+  date     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}

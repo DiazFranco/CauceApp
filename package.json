@@ -1,0 +1,21 @@
+{
+  "name": "cauce",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "yarn@4.18.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"yarn workspace backend dev\" \"yarn workspace frontend dev\"",
+    "dev:backend": "yarn workspace backend dev",
+    "dev:frontend": "yarn workspace frontend dev",
+    "build": "yarn workspace backend build && yarn workspace frontend build",
+    "lint": "yarn workspaces foreach -Ap run lint",
+    "typecheck": "yarn workspaces foreach -Ap run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
