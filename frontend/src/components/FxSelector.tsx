@@ -33,13 +33,13 @@ export default function FxSelector() {
   if (!me) return null;
 
   return (
-    <label className="flex items-center gap-2 text-sm text-slate-500">
+    <label className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
       <span className="hidden sm:inline">Dólar:</span>
       <select
         value={me.fxReference}
         onChange={(e) => mutation.mutate(e.target.value)}
         disabled={mutation.isPending}
-        className="rounded-lg border border-slate-300 px-2 py-1 text-sm text-slate-700"
+        className="rounded-lg border border-slate-300 px-2 py-1 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
       >
         {Object.entries(DOLAR_LABELS).map(([value, label]) => (
           <option key={value} value={value}>

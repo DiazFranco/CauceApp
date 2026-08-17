@@ -107,15 +107,23 @@ export async function computePortfolio(userId: string): Promise<PortfolioResult>
     }
 
     const pricedInUsd = lastPriceCurrency === "USD";
-    const valueUsd = lastPrice !== null && quantity > 0
-      ? (pricedInUsd ? lastPrice * quantity : (lastPrice * quantity) / fxRate)
-      : 0;
-    const valueArs = lastPrice !== null && quantity > 0
-      ? (pricedInUsd ? lastPrice * quantity * fxRate : lastPrice * quantity)
-      : 0;
-
     const totalCostArs =
       asset.currencyBought === "USD" ? totalCost * fxRate : totalCost;
+
+    const hasPrice = lastPrice !== null && quantity > 0;
+    const valueUsd =
+      hasPrice
+        ? (pricedInUsd ? lastPrice! * quantity : (lastPrice! * quantity) / fxRate)
+        : quantity > 0
+          ? totalCostArs / fxRate
+          : 0;
+    const valueArs =
+      hasPrice
+        ? (pricedInUsd ? lastPrice! * quantity * fxRate : lastPrice! * quantity)
+        : quantity > 0
+          ? totalCostArs
+          : 0;
+
     const returnArs = valueArs - totalCostArs;
     const returnPercent = totalCostArs > 0 ? (returnArs / totalCostArs) * 100 : 0;
 

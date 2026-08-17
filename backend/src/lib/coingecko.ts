@@ -39,4 +39,11 @@ export const CRYPTO_COIN_IDS: Record<string, string> = {
   MATIC: "matic-network",
   LTC: "litecoin",
   DOGE: "dogecoin",
+  NEXO: "nexo",
+  SHIB: "shiba-inu",
+  AVAX: "avalanche-2",
+  DOT: "polkadot",
+  LINK: "chainlink",
+  UNI: "uniswap",
+  TON: "the-open-network",
 };

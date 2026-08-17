@@ -1,8 +1,18 @@
+import { supabase } from "./supabase";
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (session?.access_token) {
+    headers.Authorization = `Bearer ${session.access_token}`;
+  }
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json", ...init?.headers },
+    headers: { ...headers, ...init?.headers },
     credentials: "include",
     ...init,
   });

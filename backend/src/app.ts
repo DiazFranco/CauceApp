@@ -23,7 +23,7 @@ export function createApp() {
     res.json({ status: "ok" });
   });
 
-  app.use("/api", assetsRouter);
+  app.use("/api/assets", assetsRouter);
   app.use("/api", transactionsRouter);
   app.use("/api", pricesRouter);
   app.use("/api/dashboard", dashboardRouter);

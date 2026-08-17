@@ -8,6 +8,13 @@ export interface DolarQuote {
 
 export type DolarKind = "oficial" | "blue" | "mep" | "ccl";
 
+const ENDPOINTS: Record<DolarKind, string> = {
+  oficial: "oficial",
+  blue: "blue",
+  mep: "bolsa",
+  ccl: "contadoconliqui",
+};
+
 const TTL_MS = 5 * 60 * 1000;
 
 const cache = new Map<DolarKind, { at: number; quote: DolarQuote }>();
@@ -18,7 +25,7 @@ export async function getDolar(kind: DolarKind): Promise<DolarQuote> {
     return cached.quote;
   }
 
-  const res = await fetch(`${BASE_URL}/${kind}`);
+  const res = await fetch(`${BASE_URL}/${ENDPOINTS[kind]}`);
   if (!res.ok) {
     throw new Error(`DolarAPI respondió ${res.status} para ${kind}`);
   }

@@ -55,19 +55,19 @@ export default function AssetForm({ asset, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-slate-900">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-700 dark:bg-slate-800">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
           {asset ? "Editar activo" : "Nuevo activo"}
         </h2>
         <form onSubmit={submit} className="mt-4 space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">
+            <label className="mb-1 block text-sm font-medium text-slate-600 dark:text-slate-300">
               Tipo
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as AssetType)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             >
               {ASSET_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -77,55 +77,55 @@ export default function AssetForm({ asset, onClose }: Props) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">
+            <label className="mb-1 block text-sm font-medium text-slate-600 dark:text-slate-300">
               Ticker
             </label>
             <input
               value={ticker}
               onChange={(e) => setTicker(e.target.value)}
               placeholder="Ej: AAPL, BTC, SPY"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">
-              Nombre <span className="text-slate-400">(opcional)</span>
+            <label className="mb-1 block text-sm font-medium text-slate-600 dark:text-slate-300">
+              Nombre <span className="text-slate-400 dark:text-slate-500">(opcional)</span>
             </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Apple, Bitcoin…"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">
+            <label className="mb-1 block text-sm font-medium text-slate-600 dark:text-slate-300">
               Moneda de compra
             </label>
             <select
               value={currencyBought}
               onChange={(e) => setCurrencyBought(e.target.value as Currency)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             >
               <option value="ARS">ARS</option>
               <option value="USD">USD</option>
             </select>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-cauce-coral">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="rounded-lg bg-cauce-cian px-4 py-2 text-sm font-medium text-cauce-azul hover:bg-cauce-cianOscuro disabled:opacity-50"
             >
               {mutation.isPending ? "Guardando…" : asset ? "Guardar" : "Crear"}
             </button>

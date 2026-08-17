@@ -56,6 +56,26 @@ transactionsRouter.post("/assets/:assetId/transactions", async (req, res, next) 
   }
 });
 
+transactionsRouter.patch("/transactions/:id", async (req, res, next) => {
+  try {
+    const tx = await prisma.transaction.findFirst({
+      where: { id: req.params.id, asset: { userId: req.userId } },
+    });
+    if (!tx) {
+      return res.status(404).json({ error: "Transacción no encontrada" });
+    }
+
+    const parsed = transactionSchema.partial().parse(req.body);
+    const updated = await prisma.transaction.update({
+      where: { id: req.params.id },
+      data: { ...parsed, date: parsed.date ? new Date(parsed.date) : undefined },
+    });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
+
 transactionsRouter.delete("/transactions/:id", async (req, res, next) => {
   try {
     const tx = await prisma.transaction.findFirst({

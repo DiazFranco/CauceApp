@@ -58,7 +58,7 @@ export default function PriceForm({ assetId, isCrypto }: Props) {
     <div className="space-y-3">
       <form onSubmit={submit} className="flex flex-wrap items-end gap-2">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-500">
+          <label className="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">
             Último precio
           </label>
           <input
@@ -68,17 +68,17 @@ export default function PriceForm({ assetId, isCrypto }: Props) {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="123.45"
-            className="w-32 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-32 rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-500">
+          <label className="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">
             Moneda
           </label>
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value as Currency)}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
           >
             <option value="ARS">ARS</option>
             <option value="USD">USD</option>
@@ -87,7 +87,7 @@ export default function PriceForm({ assetId, isCrypto }: Props) {
         <button
           type="submit"
           disabled={manualMutation.isPending}
-          className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
+          className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600"
         >
           Guardar
         </button>
@@ -97,14 +97,14 @@ export default function PriceForm({ assetId, isCrypto }: Props) {
         <button
           onClick={() => fetchMutation.mutate()}
           disabled={fetchMutation.isPending}
-          className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100 disabled:opacity-50"
+          className="rounded-lg border border-cauce-cian bg-cauce-cian/10 px-3 py-2 text-sm font-medium text-cauce-cianOscuro hover:bg-cauce-cian/20 disabled:opacity-50"
         >
           {fetchMutation.isPending ? "Consultando…" : "Traer precio automático (cripto)"}
         </button>
       )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {message && <p className="text-sm text-green-600">{message}</p>}
+      {error && <p className="text-sm text-cauce-coral">{error}</p>}
+      {message && <p className="text-sm text-cauce-verde">{message}</p>}
     </div>
   );
 }

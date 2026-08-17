@@ -1,19 +1,28 @@
 import { useAuth } from "../hooks/useAuth";
+import { LogoMark } from "../components/Brand";
 
 export default function Login() {
   const { signInWithGoogle, loading } = useAuth();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Cauce</h1>
-        <p className="mt-2 text-sm text-slate-500">
-          Tu portfolio de inversiones en ARS y USD, en un solo lugar.
+    <div className="flex min-h-screen items-center justify-center bg-cauce-azul px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-white p-8 text-center shadow-xl dark:bg-slate-800">
+        <span className="mx-auto text-cauce-cian">
+          <LogoMark className="h-8 w-11" />
+        </span>
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-cauce-azul dark:text-slate-100">
+          Cauce
+        </h1>
+        <p className="mt-2 text-sm font-semibold text-cauce-cian">
+          Tus inversiones en el rumbo correcto.
+        </p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Encausá tu patrimonio, impulsá tu futuro.
         </p>
         <button
           onClick={signInWithGoogle}
           disabled={loading}
-          className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+          className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
         >
           <GoogleIcon />
           Ingresar con Google
