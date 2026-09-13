@@ -29,7 +29,7 @@ Requiere `.env` en `backend/` (ver `backend/.env.example`).
 
 1. Subí el repo a GitHub.
 2. En Render: **New > Blueprint** y conectá el repo (usa `render.yaml`), **o** creá un *Web Service*:
-   - Build: `yarn install --immutable && yarn workspace backend prisma generate && yarn workspace backend build`
+   - Build: `corepack enable && yarn install --immutable && yarn workspace backend prisma generate && yarn workspace backend build`
    - Start: `yarn workspace backend start`
 3. Configurá las env vars del servicio:
    - `DATABASE_URL` y `DIRECT_URL` (cadenas de Supabase, ver `backend/.env.example`)
