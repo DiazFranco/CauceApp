@@ -13,12 +13,14 @@ const assetSchema = z.object({
   ticker: z.string().min(1).max(20).transform((s) => s.toUpperCase()),
   name: z.string().max(120).optional().nullable(),
   currencyBought: z.enum(["ARS", "USD"]),
+  portfolioId: z.string().min(1),
 });
 
 assetsRouter.get("/", async (req, res, next) => {
   try {
+    const portfolioId = (req.query.portfolioId as string | undefined) ?? (await defaultPortfolioId(req.userId!));
     const assets = await prisma.asset.findMany({
-      where: { userId: req.userId },
+      where: { userId: req.userId, portfolioId },
       orderBy: { createdAt: "asc" },
     });
     res.json(assets);
@@ -27,9 +29,25 @@ assetsRouter.get("/", async (req, res, next) => {
   }
 });
 
+async function defaultPortfolioId(userId: string) {
+  const portfolio =
+    (await prisma.portfolio.findFirst({ where: { userId, isDefault: true } })) ??
+    (await prisma.portfolio.findFirst({ where: { userId }, orderBy: { createdAt: "asc" } }));
+  if (!portfolio) {
+    throw new Error("Cartera no encontrada");
+  }
+  return portfolio.id;
+}
+
 assetsRouter.post("/", async (req, res, next) => {
   try {
     const parsed = assetSchema.parse(req.body);
+    const portfolio = await prisma.portfolio.findFirst({
+      where: { id: parsed.portfolioId, userId: req.userId },
+    });
+    if (!portfolio) {
+      return res.status(404).json({ error: "Cartera no encontrada" });
+    }
     const asset = await prisma.asset.create({
       data: { ...parsed, userId: req.userId! },
     });
@@ -42,6 +60,14 @@ assetsRouter.post("/", async (req, res, next) => {
 assetsRouter.patch("/:id", async (req, res, next) => {
   try {
     const parsed = assetSchema.partial().parse(req.body);
+    if (parsed.portfolioId) {
+      const portfolio = await prisma.portfolio.findFirst({
+        where: { id: parsed.portfolioId, userId: req.userId },
+      });
+      if (!portfolio) {
+        return res.status(404).json({ error: "Cartera no encontrada" });
+      }
+    }
     const asset = await prisma.asset.updateMany({
       where: { id: req.params.id, userId: req.userId },
       data: parsed,

@@ -44,24 +44,43 @@ model User {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
+  portfolios        Portfolio[]
   assets            Asset[]
   portfolioSnapshots PortfolioSnapshot[]
+}
+
+model Portfolio {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assets Asset[]
+  snapshots PortfolioSnapshot[]
+
+  @@index([userId])
 }
 
 model Asset {
   id            String   @id @default(uuid())
   userId        String
+  portfolioId   String
   type          AssetType
   ticker        String
   name          String?
   currencyBought Currency
   createdAt     DateTime @default(now())
 
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolio    Portfolio      @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   priceSnapshots PriceSnapshot[]
 
   @@index([userId])
+  @@index([portfolioId])
 }
 
 model Transaction {
@@ -92,13 +111,15 @@ model PriceSnapshot {
 }
 
 model PortfolioSnapshot {
-  id       String   @id @default(uuid())
-  userId   String
-  totalArs Decimal  @db.Decimal(24, 2)
-  totalUsd Decimal  @db.Decimal(24, 2)
-  date     DateTime @default(now())
+  id          String   @id @default(uuid())
+  userId      String
+  portfolioId String
+  totalArs    Decimal  @db.Decimal(24, 2)
+  totalUsd    Decimal  @db.Decimal(24, 2)
+  date        DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 
-  @@index([userId, date])
+  @@index([portfolioId, date])
 }

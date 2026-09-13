@@ -38,6 +38,9 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
       email: supabaseUser.email ?? "",
       name: (supabaseUser.user_metadata?.full_name as string) ?? supabaseUser.email ?? null,
       avatarUrl: (supabaseUser.user_metadata?.avatar_url as string) ?? null,
+      portfolios: {
+        create: { name: "Cartera principal", isDefault: true },
+      },
     },
   });
 

@@ -3,6 +3,7 @@ import cors from "cors";
 import { ZodError } from "zod";
 import { env } from "./env.js";
 import { assetsRouter } from "./routes/assets.js";
+import { portfoliosRouter } from "./routes/portfolios.js";
 import { transactionsRouter } from "./routes/transactions.js";
 import { pricesRouter } from "./routes/prices.js";
 import { dashboardRouter } from "./routes/dashboard.js";
@@ -24,6 +25,7 @@ export function createApp() {
   });
 
   app.use("/api/assets", assetsRouter);
+  app.use("/api/portfolios", portfoliosRouter);
   app.use("/api", transactionsRouter);
   app.use("/api", pricesRouter);
   app.use("/api/dashboard", dashboardRouter);

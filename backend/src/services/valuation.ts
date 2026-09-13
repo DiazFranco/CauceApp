@@ -28,6 +28,8 @@ export interface Position {
 }
 
 export interface PortfolioResult {
+  portfolioId: string;
+  portfolioName: string;
   fxRate: number;
   fxName: string;
   totalArs: number;
@@ -35,22 +37,48 @@ export interface PortfolioResult {
   positions: Position[];
 }
 
-export async function computePortfolio(userId: string): Promise<PortfolioResult> {
+export async function resolvePortfolio(userId: string, portfolioId?: string) {
+  if (portfolioId) {
+    const portfolio = await prisma.portfolio.findFirst({
+      where: { id: portfolioId, userId },
+    });
+    if (!portfolio) {
+      throw new Error("Cartera no encontrada");
+    }
+    return portfolio;
+  }
+
+  const portfolio =
+    (await prisma.portfolio.findFirst({ where: { userId, isDefault: true } })) ??
+    (await prisma.portfolio.findFirst({
+      where: { userId },
+      orderBy: { createdAt: "asc" },
+    }));
+  if (!portfolio) {
+    throw new Error("Cartera no encontrada");
+  }
+  return portfolio;
+}
+
+export async function computePortfolio(userId: string, portfolioId?: string): Promise<PortfolioResult> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     throw new Error("Usuario no encontrado");
   }
 
+  const portfolio = await resolvePortfolio(userId, portfolioId);
+  const assetWhere = { userId, portfolioId: portfolio.id };
+
   const fxKind = FX_REFERENCE_TO_KIND[user.fxReference];
   const [dolar, assets, transactions, snapshots] = await Promise.all([
     getDolar(fxKind),
-    prisma.asset.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
+    prisma.asset.findMany({ where: assetWhere, orderBy: { createdAt: "asc" } }),
     prisma.transaction.findMany({
-      where: { asset: { userId } },
+      where: { asset: assetWhere },
       orderBy: { date: "asc" },
     }),
     prisma.priceSnapshot.findMany({
-      where: { asset: { userId } },
+      where: { asset: assetWhere },
       orderBy: { updatedAt: "desc" },
     }),
   ]);
@@ -148,13 +176,22 @@ export async function computePortfolio(userId: string): Promise<PortfolioResult>
     totalUsd += valueUsd;
   }
 
-  return { fxRate, fxName: fxKind, totalArs, totalUsd, positions };
+  return {
+    portfolioId: portfolio.id,
+    portfolioName: portfolio.name,
+    fxRate,
+    fxName: fxKind,
+    totalArs,
+    totalUsd,
+    positions,
+  };
 }
 
-export async function savePortfolioSnapshot(userId: string, result: PortfolioResult) {
+export async function savePortfolioSnapshot(userId: string, portfolioId: string, result: PortfolioResult) {
   return prisma.portfolioSnapshot.create({
     data: {
       userId,
+      portfolioId,
       totalArs: result.totalArs,
       totalUsd: result.totalUsd,
     },

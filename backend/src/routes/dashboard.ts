@@ -8,19 +8,22 @@ dashboardRouter.use(requireAuth);
 
 dashboardRouter.get("/", async (req, res, next) => {
   try {
-    const result = await computePortfolio(req.userId!);
+    const portfolioId = req.query.portfolioId as string | undefined;
+    const result = await computePortfolio(req.userId!, portfolioId);
 
     const history = await prisma.portfolioSnapshot.findMany({
-      where: { userId: req.userId },
+      where: { portfolioId: result.portfolioId },
       orderBy: { date: "asc" },
     });
 
     const last = history[history.length - 1];
     if (!last || shouldSave(last, result.totalArs)) {
-      void savePortfolioSnapshot(req.userId!, result).catch(() => {});
+      void savePortfolioSnapshot(req.userId!, result.portfolioId, result).catch(() => {});
     }
 
     res.json({
+      portfolioId: result.portfolioId,
+      portfolioName: result.portfolioName,
       totalArs: Math.round(result.totalArs),
       totalUsd: result.totalUsd,
       fxRate: result.fxRate,
