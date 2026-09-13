@@ -23,6 +23,28 @@ yarn dev
 
 Requiere `.env` en `backend/` (ver `backend/.env.example`).
 
+## Deploy
+
+### Backend — Render
+
+1. Subí el repo a GitHub.
+2. En Render: **New > Blueprint** y conectá el repo (usa `render.yaml`), **o** creá un *Web Service*:
+   - Build: `yarn install --immutable && yarn workspace backend prisma generate && yarn workspace backend build`
+   - Start: `yarn workspace backend start`
+3. Configurá las env vars del servicio:
+   - `DATABASE_URL` y `DIRECT_URL` (cadenas de Supabase, ver `backend/.env.example`)
+   - `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`
+   - `FRONTEND_ORIGIN`: URL del frontend en Vercel
+4. Las migraciones se aplican solas en el build (`prisma migrate deploy`).
+
+### Frontend — Vercel
+
+1. En Vercel importá el mismo repo (raíz del monorepo). Usa `vercel.json`: hace build de `frontend/` y sirve como SPA.
+2. Configurá las env vars del proyecto:
+   - `VITE_API_URL`: URL del backend en Render (ej: `https://cauce-api.onrender.com`)
+   - `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`
+3. Vinculá `FRONTEND_ORIGIN` del backend con esta URL (`https://TU-FRONT.vercel.app`).
+
 ## Roadmap
 
 Ver `RFC-001.md` para alcance del MVP, sprints y fases futuras.

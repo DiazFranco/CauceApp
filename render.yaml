@@ -1,0 +1,30 @@
+# Render Blueprint — Backend Express de Cauce
+# Deploy: Subí el repo y conectá este blueprint (New > Blueprint), o cae automáticamente con el repo.
+# Las credenciales se cargan como env vars manualmente en el dashboard (sync: false).
+services:
+  - type: web
+    name: cauce-api
+    runtime: node
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
+    buildCommand: |
+      yarn install --immutable
+      yarn workspace backend prisma generate
+      yarn workspace backend prisma migrate deploy
+      yarn workspace backend build
+    startCommand: yarn workspace backend start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+          # Ej producción: https://cauce-front.vercel.app
