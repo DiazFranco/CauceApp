@@ -1,7 +1,7 @@
 {
   "framework": "vite",
-  "installCommand": "yarn install",
-  "buildCommand": "yarn workspace frontend build",
+  "installCommand": "corepack yarn install",
+  "buildCommand": "corepack yarn workspace frontend build",
   "outputDirectory": "frontend/dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
