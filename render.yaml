@@ -9,12 +9,11 @@ services:
     healthCheckPath: /api/health
     autoDeploy: true
     buildCommand: |
-      corepack enable
-      yarn install --immutable
-      yarn workspace backend prisma generate
-      yarn workspace backend build
-      yarn workspace backend prisma migrate deploy || true
-    startCommand: yarn workspace backend start
+      corepack yarn install --immutable
+      corepack yarn workspace backend prisma generate
+      corepack yarn workspace backend build
+      corepack yarn workspace backend prisma migrate deploy || true
+    startCommand: node backend/dist/index.js
     envVars:
       - key: NODE_ENV
         value: production
