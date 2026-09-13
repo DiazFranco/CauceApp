@@ -1,5 +1,4 @@
 {
-  "framework": "vite",
   "installCommand": "corepack yarn install",
   "buildCommand": "corepack yarn workspace frontend build",
   "outputDirectory": "frontend/dist",
